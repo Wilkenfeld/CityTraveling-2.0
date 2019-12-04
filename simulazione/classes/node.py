@@ -5,4 +5,4 @@ class Node():
         self.id = id
         self.closeTo = closeTo
         self.nodeType = nodeType
-
+    
