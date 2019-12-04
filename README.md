@@ -4,8 +4,8 @@
 
 La simulazione software si presenta con due aree principali:
 
-    + la rappresentazione grafica della città (vedi la sezione apposita);
-    + il menù di controllo
+    - la rappresentazione grafica della città (vedi la sezione apposita);
+    - il menù di controllo
 
 ### Rappresentazione grafica
 
