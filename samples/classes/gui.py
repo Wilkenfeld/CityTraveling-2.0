@@ -47,8 +47,8 @@ class GUI():
         for node in graph.nodes:
 
             # Checks if the node exists
-            avoid = False
             for x in self.coords:
+                avoid = False
                 if x["id"] == node.id:
                     avoid = True       
 
