@@ -1,4 +1,4 @@
-import classes.node as node
+import samples.classes.node as node
 import json
 
 class Graph():
@@ -11,5 +11,5 @@ class Graph():
                nodesRaw = json.load(file)
                i = 0
                for nodeRaw in nodesRaw:
-                self.nodes[i] = node(nodeRaw["id"], nodeRaw["closeTo"])
+                self.nodes[i] = node(nodeRaw["id"], nodeRaw["closeTo"], nodeRaw["nodeType"])
 
