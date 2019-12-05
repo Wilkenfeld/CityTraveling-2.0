@@ -66,4 +66,4 @@ class GUI():
                     self.coords.append(coords)
 
                     for close in node.closeTo:
-                    
+                        pass
