@@ -2,7 +2,7 @@ import math as Math
 import samples.classes.core as core
 from tkinter import *
 from tkinter import filedialog
-import samples.classes.graph as Graph
+import samples.classes.graph as graph
 
 # Main Window
 root = Tk()
@@ -14,7 +14,7 @@ class GUI():
     def main(self):
         
         # Creation of the main elements of the page
-        cityScheme = Graph()
+        cityScheme = graph.Graph()
         cityModel = Canvas(master=root, bg="grey", width=500, height=680)
         menu = Frame(master=root, borderwidth=3, height="680", width="700", padx="200")
         title = Label(master=menu, text="CitySim! (ALPHA RELEASE 1.0)")
@@ -30,7 +30,7 @@ class GUI():
         root.geometry("1200x680")
 
         # Execution
-        if __name__ == "__main__": root.mainloop()
+        root.mainloop()
 
     # Gets the JSON file
     def openJSONFile(self):
@@ -54,8 +54,8 @@ class GUI():
 
                 if avoid is False:
                     # Coords of the center of the node
-                    hor = Math.abs(Math.cos(distance) * distance) % core.canvasDimensions[0]
-                    ver = Math.abs(Math.sin(distance) * distance) % core.canvasDimensions[1]
+                    hor = abs(Math.cos(distance) * distance) % core.canvasDimensions[0]
+                    ver = abs(Math.sin(distance) * distance) % core.canvasDimensions[1]
                     
                     coords = {
                         "id": node.id,

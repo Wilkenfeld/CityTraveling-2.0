@@ -11,5 +11,5 @@ class Graph():
                nodesRaw = json.load(file)
                i = 0
                for nodeRaw in nodesRaw:
-                self.nodes[i] = node(nodeRaw["id"], nodeRaw["closeTo"], nodeRaw["nodeType"])
+                self.nodes[i] = node.Node(nodeRaw["id"], nodeRaw["closeTo"], nodeRaw["nodeType"])
 
