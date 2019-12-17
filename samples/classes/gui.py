@@ -1,24 +1,26 @@
 import math as Math
-import samples.classes.core as core
 from tkinter import *
+import graph as Graph
+#import core
 from tkinter import filedialog
-import samples.classes.graph as Graph
+import networkx as nx
 
 # Main Window
 root = Tk()
 
 class GUI():
 
-    coords = []
+    graph = None
 
     def main(self):
         
         # Creation of the main elements of the page
-        cityScheme = Graph()
+        cityScheme = None
         cityModel = Canvas(master=root, bg="grey", width=500, height=680)
         menu = Frame(master=root, borderwidth=3, height="680", width="700", padx="200")
         title = Label(master=menu, text="CitySim! (ALPHA RELEASE 1.0)")
         JSONMenu = Button(master=menu, text="Open File", padx="5", pady="5", command=self.openJSONFile)
+        runButton = Button(master=menu, text="Run", padx="5", pady="5", command=self.graph.run)
 
 
         # Layout of the window
@@ -30,40 +32,32 @@ class GUI():
         root.geometry("1200x680")
 
         # Execution
-        if __name__ == "__main__": root.mainloop()
+        root.mainloop()
 
     # Gets the JSON file
     def openJSONFile(self):
-        self.JSONFilePath = filedialog.askopenfilename(title="Select JSON file", 
+        core.JSONFilePath = filedialog.askopenfilename(title="Select JSON file", 
                                                         filetypes=[("JSON Files", ".json")])
+        self.graph = Graph(core.JSONFilePath)
 
-    # Calcs the proportions (in units) to draw nodes & links
-    def calcCoords(self, graph):
+    # Creates the networkx graph
+    def nxGraph(self, graph_obj):
+        # Creates the graph
+        graph = nx.DiGraph()
 
-        # Default values for the first node
-        nodeCenter = (core.nodeDimension, core.nodeDimension)
-        distance = 0
+        # Positions of the nodes on the plot
+        position_dict = dict()
 
-        for node in graph.nodes:
+        # Adds the nodes to the graph
+        for node in graph_obj.nodes:
+            graph.add_node(node.id)
 
-            # Checks if the node exists
-            for x in self.coords:
-                avoid = False
-                if x["id"] == node.id:
-                    avoid = True       
+            # Adds the edges
+            for link in node.closeTo:
+                graph.add_edge(node.id, link[0], weight=link[1])
 
-                if avoid is False:
-                    # Coords of the center of the node
-                    hor = Math.abs(Math.cos(distance) * distance) % core.canvasDimensions[0]
-                    ver = Math.abs(Math.sin(distance) * distance) % core.canvasDimensions[1]
-                    
-                    coords = {
-                        "id": node.id,
-                        "nodeCenter": nodeCenter,
-                        "type": node.type
-                    }
-                    
-                    self.coords.append(coords)
-
-                    for close in node.closeTo:
-                        pass
+            # Adds the values to the dictionary
+            position_dict[node.id] = node.position
+            
+        return graph
+            
