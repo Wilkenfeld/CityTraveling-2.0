@@ -3,7 +3,7 @@ from tkinter import *
 import graph as Graph
 #import core
 from tkinter import filedialog
-import networkx as nx
+import samples.classes.graph as graph
 
 # Main Window
 root = Tk()
