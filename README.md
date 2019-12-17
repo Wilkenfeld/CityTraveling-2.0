@@ -80,9 +80,9 @@ una serie di oggetti, che rappresentano i nodi.
 Ogni nodo contiene:
 
 - un **id**, che identifica il nodo
+- una lista **position**, dove sono contenute le coordinate x e y dell'incrocio
 - una lista chiamata **closeTo**, dentro alla quale sono contenute tante liste
 quanti sono i nodi raggiungibili. Ogni sottolista è composta
-dall'ID del nodo, la distanza da esso, il grado dell'angolo che si forma rispetto alle sue coordinate,
-l'inquinamento massimo che quella strada può sostenere.
+dall'ID del nodo e l'inquinamento massimo che quella strada può sostenere.
 - **nodeType**, che specifica il tipo di nodo
 (specifica se è un semaforo, un incrocio o un passaggio a livello).
