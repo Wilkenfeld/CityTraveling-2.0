@@ -1,11 +1,24 @@
 import networkx as nx
 import matplotlib.pyplot as plt
-from graph import Graph as Graph
+from samples.classes.graph import Graph as Graph
 
-graph_obj = Graph("C:/Users\Roberto\Desktop\progetto scientifico FLL\samples\cities/test.json")
-
+graph_obj = Graph("C:\\Users\\Azale29\\Documents\\Lego scuola scientifico\\CityTraveling-2.0\\samples\\cities\\test.json")
         
-nx.draw_networkx(graph, with_labels=True, pos=position_dict)
+graph = nx.Graph()
+
+graph_dict = dict()
+
+# Adds the nodes to the graph
+for node in graph_obj.nodes:
+    graph.add_node(node.id)
+    # Adds the edges
+    for link in node.closeTo:
+        graph.add_edge(node.id, link[0], weight=link[1])
+
+    graph_dict[node.id] = node.position
+    print(node.position)
+
+nx.draw_networkx(graph, with_labels=True, pos=graph_dict)
 
 plt.draw()
 plt.show()

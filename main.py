@@ -1,4 +1,5 @@
-import samples.classes.gui as gui_pk
+import samples.classes.gui as GUI
 
-gui = gui_pk.GUI()
-gui.main()
+gui = GUI.GUI()
+
+if __name__ == "__main__": gui.main()
