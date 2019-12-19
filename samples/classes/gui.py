@@ -2,6 +2,7 @@ import math as Math
 from tkinter import *
 import tkinter
 from tkinter import filedialog
+import matplotlib as mpl
 import matplotlib.pyplot as plt
 import networkx as nx
 from matplotlib.backend_bases import key_press_handler
@@ -23,8 +24,8 @@ class GUI():
         
         # Creation of the main elements of the page
         cityScheme = None
-        self.cityModel = Frame(master=root, bg="grey", width=500, height=680)
-        menu = Frame(master=root, borderwidth=3, height="680", width="700", padx="200")
+        self.cityModel = Frame(master=root, bg="grey", width="1000", height="500")
+        menu = Frame(master=root, borderwidth=3, height="500", width="100", pady="30", padx="30")
         title = Label(master=menu, text="CitySim! (ALPHA RELEASE 1.0)")
         JSONMenu = Button(master=menu, text="Open File", padx="5", pady="5", command=self.openJSONFile)
         runButton = Button(master=menu, text="Run", padx="5", pady="5", command=self.run)
@@ -33,10 +34,14 @@ class GUI():
         root.title("CitySim")
         title.pack(side="top")
         JSONMenu.pack(side="top")
-        self.cityModel.grid(sticky="NSEW", rowspan=4)
-        menu.grid(column="1", row="1", padx="30")
-        root.geometry("1200x680")
         runButton.pack()
+        self.cityModel.grid(row="0", column="0", sticky="N")
+        
+        menu.grid(row="0", column="1", padx="30", sticky="N")
+        
+        root.grid_propagate(False)
+        root.geometry("1200x680")
+        
 
         # Execution
         root.mainloop()
@@ -69,18 +74,27 @@ class GUI():
 
     # run the example
     def run(self):
-        graph_obj = Graph("C:\\Users\\Azale29\\Documents\\Lego scuola scientifico\\CityTraveling-2.0\\samples\\cities\\test.json")
+        graph_obj = Graph(".\\samples\\cities\\test.json")
 
-        fig = Figure(figsize=(5, 4), dpi=100)
-        fig.add_subplot(111).plot()
-
-        canvas = FigureCanvasTkAgg(fig, master=self.cityModel)  # A tk.DrawingArea.
-        canvas.draw()
-        canvas.get_tk_widget().pack(side=tkinter.TOP, fill=tkinter.BOTH, expand=1)
-
-        #cretes nx graph
+        #creates nx graph
         nx_graph = self.nxGraph(graph_obj)
+
+        # The dimension of the widget is calculated by x * dpi and y * dpi,
+        # where x = figsize[0] and y = figsize[1]
+        fig = Figure(figsize=(5, 5), dpi=100)
+        axes = fig.add_subplot(111, xmargin=0, ymargin=0, frameon="False")
+
+        axes.set_axis_off()
+        # plt.subplots_adjust(left=-1, right=0, top=0, bottom=-1)
+
+        canvas = FigureCanvasTkAgg(fig, master=self.cityModel)
+        canvas.get_tk_widget().grid(column=0, row=0)
+        
+        
         #draw graph
-        nx.draw_networkx(nx_graph, with_labels=True, pos=self.position_dict)
+        nx.draw_networkx(nx_graph, with_labels=True, ax=axes, pos=self.position_dict)
+        
+        canvas.draw()
+        
         plt.draw()
         plt.show()
