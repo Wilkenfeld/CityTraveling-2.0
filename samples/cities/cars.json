@@ -1,0 +1,8 @@
+[
+    {
+        "id": 0,
+        "type": "car",
+        "startPoint": 1,
+        "endPoint": 5
+    }
+]
