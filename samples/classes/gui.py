@@ -69,7 +69,7 @@ class GUI():
 
     # run the example
     def run(self):
-        graph_obj = Graph("C:\\Users\\Azale29\\Documents\\Lego scuola scientifico\\CityTraveling-2.0\\samples\\cities\\test.json")
+        graph_obj = Graph(".\\samples\\cities\\test.json")
 
         fig = Figure(figsize=(5, 4), dpi=100)
         fig.add_subplot(111).plot()
@@ -78,8 +78,9 @@ class GUI():
         canvas.draw()
         canvas.get_tk_widget().pack(side=tkinter.TOP, fill=tkinter.BOTH, expand=1)
 
-        #cretes nx graph
+        #creates nx graph
         nx_graph = self.nxGraph(graph_obj)
+
         #draw graph
         nx.draw_networkx(nx_graph, with_labels=True, pos=self.position_dict)
         plt.draw()
