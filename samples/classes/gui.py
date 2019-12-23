@@ -1,4 +1,5 @@
 import math as Math
+from functools import partial
 from tkinter import *
 import tkinter
 from tkinter import filedialog
@@ -9,9 +10,11 @@ from matplotlib.backend_bases import key_press_handler
 from matplotlib.backends.backend_tkagg import (FigureCanvasTkAgg,
                                                NavigationToolbar2Tk)
 from matplotlib.figure import Figure
-import samples.classes.core as core
-import samples.classes.graph as graph
-from samples.classes.graph import Graph
+
+# Custom imports
+from .core import *
+from .graph import Graph
+from .commandsHandler import CommandHandler as handler
 
 # Main Window
 root = Tk()
@@ -24,22 +27,35 @@ class GUI():
         
         # Creation of the main elements of the page
         cityScheme = None
-        self.cityModel = Frame(master=root, bg="grey", width="1000", height="500")
+        self.cityModel = Canvas(master=root, bg="grey", width="500", height="500")
         menu = Frame(master=root, borderwidth=3, height="500", width="100", pady="30", padx="30")
         title = Label(master=menu, text="CitySim! (ALPHA RELEASE 1.0)")
-        JSONMenu = Button(master=menu, text="Open File", padx="5", pady="5", command=self.openJSONFile)
-        runButton = Button(master=menu, text="Run", padx="5", pady="5", command=self.run)
+        JSONMenu = Button(master = menu, text="Open File", padx="5", pady="5", command=self.openJSONFile)
+        runButton = Button(master = menu, text="Run", padx="5", pady="5", command=self.run)
+
+        self.carsMenu = Frame(master = root, bg ="black", width="500")
+        self.carsList = Frame(master = self.carsMenu, bg = "green", width="500")
+        self.manageBar = Frame(master = self.carsMenu, bg = "blue", width = "500")
 
         # Layout of the window
         root.title("CitySim")
         title.pack(side="top")
         JSONMenu.pack(side="top")
         runButton.pack()
-        self.cityModel.grid(row="0", column="0", sticky="N")
-        
-        menu.grid(row="0", column="1", padx="30", sticky="N")
-        
-        root.grid_propagate(False)
+
+        # centers the menu
+        root.grid_columnconfigure(1, weight="1")
+
+        self.cityModel.grid(column="0", row="0")
+        menu.grid(column="1", row="0")
+
+        self.carsMenu.columnconfigure(0, weight=1)
+        self.carsMenu.grid(column="0", row="1", sticky="NSEW")
+        self.carsList.grid(column="0", row="0", sticky="NSEW")
+        self.manageBar.grid(column="0", row="1", sticky="NSEW")
+
+        root.grid_propagate(True)
+        root.resizable(True, True)
         root.geometry("1200x680")
         
 
@@ -48,9 +64,12 @@ class GUI():
 
     # Gets the JSON file
     def openJSONFile(self):
-        core.JSONFilePath = filedialog.askopenfilename(title="Select JSON file", 
+        JSONFilePath = filedialog.askopenfilename(title="Select JSON file", 
                                                         filetypes=[("JSON Files", ".json")])
-        self.graph = Graph(core.JSONFilePath)
+        self.graph_obj = Graph(JSONFilePath)
+        self.createCityImage()
+        self.createCarsMenu()
+
 
     # Creates the networkx graph
     def nxGraph(self, graph_obj):
@@ -72,23 +91,18 @@ class GUI():
 
         return graph
 
-    # run the example
-    def run(self):
-        graph_obj = Graph(".\\samples\\cities\\test.json")
+    # shows the city
+    def createCityImage(self):
 
         #creates nx graph
-        nx_graph = self.nxGraph(graph_obj)
+        nx_graph = self.nxGraph(self.graph_obj)
 
         # The dimension of the widget is calculated by x * dpi and y * dpi,
         # where x = figsize[0] and y = figsize[1]
         fig = Figure(figsize=(5, 5), dpi=100)
         axes = fig.add_subplot(111, xmargin=0, ymargin=0, frameon="False")
 
-        #creates nx graph
-        nx_graph = self.nxGraph(graph_obj)
-
         axes.set_axis_off()
-        # plt.subplots_adjust(left=-1, right=0, top=0, bottom=-1)
 
         canvas = FigureCanvasTkAgg(fig, master=self.cityModel)
         canvas.get_tk_widget().grid(column=0, row=0)
@@ -98,6 +112,32 @@ class GUI():
         nx.draw_networkx(nx_graph, with_labels=True, ax=axes, pos=self.position_dict)
         
         canvas.draw()
-        
-        plt.draw()
-        plt.show()
+
+
+    def run(self):
+        pass
+
+    def createCarsMenu(self):
+        # creates the header of the table
+        headers = ["Car Number", "Type", "Start", "Destination", "Status"]
+        for i, head in enumerate(headers):
+
+            tmp = Label(master=self.carsList, text=head, bg = "white", borderwidth=1, relief="groove")
+            self.carsList.columnconfigure(i, weight=1)
+            tmp.grid(column = i, row = 0, sticky="NSEW")
+
+        void = Label(master = self.carsList, text="Click Add to add a new car!")
+        void.grid(row = 1, column = 0, columnspan=len(headers))
+
+        # creates the "user" bar
+        self.buttons = []
+        headers = ["Play", "Pause", "Add", "Cancel", "Save", "Load"]
+
+        for i, head in enumerate(headers):
+            self.buttons.append({
+                "command": head,
+                "button": Button(master = self.manageBar, text = head, command = partial(handler.handleCommand, head))
+            })
+            self.manageBar.columnconfigure(i, weight=1)
+            self.buttons[i]["button"].grid(row=0, column = i, sticky="NSEW")
+
