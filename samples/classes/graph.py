@@ -1,22 +1,23 @@
-from samples.classes.node import Node as node
+from .node import Node as node
 import json
 
 class Graph():
     
+    number_of_graphs = 0
     nodes = []
 
     def __init__(self, jsonFile = None):
-        if (jsonFile != None):
+        if (jsonFile != None and Graph.number_of_graphs == 0):
+            Graph.number_of_graphs += 1
             with open(jsonFile) as file:
                nodesRaw = json.load(file)
-               i = 0
                for nodeRaw in nodesRaw:
                 self.nodes.append(
                     node(
                         nodeRaw["id"], 
                         nodeRaw["closeTo"], 
                         nodeRaw["nodeType"], 
-                        position=nodeRaw["position"]
+                        position = nodeRaw["position"]
                     )
                 )
 
