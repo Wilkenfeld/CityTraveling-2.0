@@ -13,3 +13,6 @@ nodeDimension = 2
 
 # Path to the JSON data file
 JSONFilePath = None
+
+# Cars
+cars = []
