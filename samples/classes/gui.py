@@ -27,7 +27,11 @@ class GUI():
         
         # Creation of the main elements of the page
         cityScheme = None
-        self.cityModel = Canvas(master=root, bg="grey", width="500", height="500")
+        self.cityModel = Canvas(master=root, 
+                                bg="grey", 
+                                width="500", 
+                                height="500")
+
         menu = Frame(master=root, borderwidth=3, height="500", width="100", pady="30", padx="30")
         title = Label(master=menu, text="CitySim! (ALPHA RELEASE 1.0)")
         JSONMenu = Button(master = menu, text="Open File", padx="5", pady="5", command=self.openJSONFile)
@@ -102,14 +106,17 @@ class GUI():
         fig = Figure(figsize=(5, 5), dpi=100)
         axes = fig.add_subplot(111, xmargin=0, ymargin=0, frameon="False")
 
+        #draw graph
+        nx.draw_networkx(nx_graph, with_labels=True, ax=axes, pos=self.position_dict)
+        
+        plt.margins(x = 0, y = 0, tight = True)
         axes.set_axis_off()
+        fig.tight_layout(pad = 0, h_pad=0, w_pad=0)
 
         canvas = FigureCanvasTkAgg(fig, master=self.cityModel)
         canvas.get_tk_widget().grid(column=0, row=0)
         
         
-        #draw graph
-        nx.draw_networkx(nx_graph, with_labels=True, ax=axes, pos=self.position_dict)
         
         canvas.draw()
 
@@ -126,8 +133,8 @@ class GUI():
             self.carsList.columnconfigure(i, weight=1)
             tmp.grid(column = i, row = 0, sticky="NSEW")
 
-        void = Label(master = self.carsList, text="Click Add to add a new car!")
-        void.grid(row = 1, column = 0, columnspan=len(headers))
+        self.void = Label(master = self.carsList, text="Click Add to add a new car!")
+        self.void.grid(row = 0, column = 0, columnspan=len(headers))
 
         # creates the "user" bar
         self.buttons = []
@@ -136,8 +143,16 @@ class GUI():
         for i, head in enumerate(headers):
             self.buttons.append({
                 "command": head,
-                "button": Button(master = self.manageBar, text = head, command = partial(handler.handleCommand, head))
+                "button": Button(master = self.manageBar, text = head, command = partial(handler.handleCommand, head, self))
             })
             self.manageBar.columnconfigure(i, weight=1)
             self.buttons[i]["button"].grid(row=0, column = i, sticky="NSEW")
 
+    # inserts cars in the table (called when a file is loaded or when the Add button is pressed)
+    def addCar(self):
+        self.void.destroy()
+        for i, car in enumerate(cars):
+            for j, prop in enumerate(car.props):
+                tmp = Label(master = self.carsList, text=prop, borderwidth="1", relief = "sunken", pady="5")
+                tmp.columnconfigure(j, weight = 1)
+                tmp.grid(row = i + 1, column = j, sticky="NSEW")
