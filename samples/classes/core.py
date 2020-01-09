@@ -11,8 +11,5 @@ canvasDimensions = (800, 800)
 # Pure lenght of the side of a node
 nodeDimension = 2
 
-# Path to the JSON data file
-JSONFilePath = None
-
 # Cars
 cars = []
