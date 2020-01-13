@@ -114,11 +114,10 @@ class GUI():
         fig.tight_layout(pad = 0, h_pad=0, w_pad=0)
 
         canvas = FigureCanvasTkAgg(fig, master=self.cityModel)
-        canvas.get_tk_widget().grid(column=0, row=0)
-        
-        
+        canvas.get_tk_widget().grid(column=0, row=0)   
         
         canvas.draw()
+        canvas.get_tk_widget().create_rectangle(100, 100, 200, 200, fill="blue")
 
 
     def run(self):
