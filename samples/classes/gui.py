@@ -11,6 +11,8 @@ from matplotlib.backends.backend_tkagg import (FigureCanvasTkAgg,
                                                NavigationToolbar2Tk)
 from matplotlib.figure import Figure
 import matplotlib.lines as lines
+from matplotlib.patches import Rectangle as rect
+#import matplotlib.animate as animate
 
 # Custom imports
 from .core import *
@@ -62,8 +64,9 @@ class GUI():
         root.grid_propagate(True)
         root.resizable(True, True)
         root.geometry("1200x680")
-        
 
+        self.animate()
+        
         # Execution
         root.mainloop()
 
@@ -72,6 +75,7 @@ class GUI():
         JSONFilePath = filedialog.askopenfilename(title="Select JSON file", 
                                                         filetypes=[("JSON Files", ".json")])
         self.graph_obj = Graph(JSONFilePath)
+
         self.createCityImage()
         self.createCarsMenu()
 
@@ -101,34 +105,29 @@ class GUI():
 
         nx_graph = self.nxGraph(self.graph_obj)
 
-        # The dimension of the widget is calculated by x * dpi and y * dpi,
-        # where x = figsize[0] and y = figsize[1]
+        # The dimension of the widget is calculated by x * dpi and y * dpi
         fig = Figure(figsize=(5, 5), dpi=100)
-        sp = fig.add_subplot(111)
+        self.sp = fig.add_subplot(111)
 
-        sp.plot([n.position[0] for n in self.graph_obj.nodes], [n.position[1] for n in self.graph_obj.nodes], 'ro')
+        self.sp.plot([n.position[0] for n in self.graph_obj.nodes], [n.position[1] for n in self.graph_obj.nodes], 'ro')
 
-        # #creates nx graph
-        # nx_graph = self.nxGraph(self.graph_obj)
-
+        # Draws the streets
         for node in self.graph_obj.nodes:
-            ct = node.closeTo
             
-            targets = [self.position_dict[ct[i][0]] for i, _ in enumerate(ct)]
+            targets = [self.position_dict[node.closeTo[i][0]] for i, _ in enumerate(node.closeTo)]
 
             for t in targets:
-                l = lines.Line2D(node.position[0], t[0], node.position[1], t[1])
-                sp.add_line(l)
-        
+                l = lines.Line2D([node.position[0], t[0]], [node.position[1], t[1]])
+                self.sp.add_line(l)  
                 
-        sp.plot([n.position[0] for n in self.graph_obj.nodes], [n.position[1] for n in self.graph_obj.nodes], 'ro')
+        # Draws the nodes
+        self.sp.plot([n.position[0] for n in self.graph_obj.nodes], [n.position[1] for n in self.graph_obj.nodes], 'ro')
 
-
-        canvas = FigureCanvasTkAgg(fig, master=self.cityModel)
-        canvas.get_tk_widget().grid(column=0, row=0)   
+        # Binds the city to a tkinter widget and draws it
+        self.canvas = FigureCanvasTkAgg(fig, master=self.cityModel)
+        self.canvas.get_tk_widget().grid(column=0, row=0)   
         
-        canvas.draw()
-        canvas.get_tk_widget().create_rectangle(100, 100, 200, 200, fill="blue")
+        self.canvas.draw()
 
 
     def run(self):
@@ -157,6 +156,15 @@ class GUI():
             })
             self.manageBar.columnconfigure(i, weight=1)
             self.buttons[i]["button"].grid(row=0, column = i, sticky="NSEW")
+
+    def animate(self):
+        # if the simulation is running
+        # runs the animation
+        if status == "running":
+            self.drawCars()
+            
+
+
 
     # inserts cars in the table (called when a file is loaded or when the Add button is pressed)
     def addCar(self):
