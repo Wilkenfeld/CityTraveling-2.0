@@ -2,7 +2,7 @@ import networkx as nx
 import matplotlib.pyplot as plt
 from samples.classes.graph import Graph as Graph
 
-graph_obj = Graph("C:\\Users\\Azale29\\Documents\\Lego scuola scientifico\\CityTraveling-2.0\\samples\\cities\\test.json")
+graph_obj = Graph("./samples//cities/city1.json")
         
 graph = nx.Graph()
 
@@ -21,5 +21,7 @@ for node in graph_obj.nodes:
 nx.draw_networkx(graph, with_labels=True, pos=graph_dict)
 
 plt.draw()
-plt.show()
+# plt.show()
 # print("Nodes >> {0}\nEdges >> {1}".format(graph.number_of_nodes(), graph.number_of_edges()))
+for x in graph.nodes:
+    print(x)
