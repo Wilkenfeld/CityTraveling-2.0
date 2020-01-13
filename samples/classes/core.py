@@ -13,3 +13,6 @@ nodeDimension = 2
 
 # Cars
 cars = []
+
+# Status of the app (at the beginning is setted on "start")
+status = "start"
