@@ -10,6 +10,7 @@ from matplotlib.backend_bases import key_press_handler
 from matplotlib.backends.backend_tkagg import (FigureCanvasTkAgg,
                                                NavigationToolbar2Tk)
 from matplotlib.figure import Figure
+import matplotlib.lines as lines
 
 # Custom imports
 from .core import *
@@ -98,20 +99,30 @@ class GUI():
     # shows the city
     def createCityImage(self):
 
-        #creates nx graph
         nx_graph = self.nxGraph(self.graph_obj)
 
         # The dimension of the widget is calculated by x * dpi and y * dpi,
         # where x = figsize[0] and y = figsize[1]
         fig = Figure(figsize=(5, 5), dpi=100)
-        axes = fig.add_subplot(111, xmargin=0, ymargin=0, frameon="False")
+        sp = fig.add_subplot(111)
 
-        #draw graph
-        nx.draw_networkx(nx_graph, with_labels=True, ax=axes, pos=self.position_dict)
+        sp.plot([n.position[0] for n in self.graph_obj.nodes], [n.position[1] for n in self.graph_obj.nodes], 'ro')
+
+        # #creates nx graph
+        # nx_graph = self.nxGraph(self.graph_obj)
+
+        for node in self.graph_obj.nodes:
+            ct = node.closeTo
+            
+            targets = [self.position_dict[ct[i][0]] for i, _ in enumerate(ct)]
+
+            for t in targets:
+                l = lines.Line2D(node.position[0], t[0], node.position[1], t[1])
+                sp.add_line(l)
         
-        plt.margins(x = 0, y = 0, tight = True)
-        axes.set_axis_off()
-        fig.tight_layout(pad = 0, h_pad=0, w_pad=0)
+                
+        sp.plot([n.position[0] for n in self.graph_obj.nodes], [n.position[1] for n in self.graph_obj.nodes], 'ro')
+
 
         canvas = FigureCanvasTkAgg(fig, master=self.cityModel)
         canvas.get_tk_widget().grid(column=0, row=0)   
