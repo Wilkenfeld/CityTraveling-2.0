@@ -19,7 +19,7 @@ class CommandHandler():
     # Add button (adds a car)
     @staticmethod
     def addCar(gui):
-        print(cars)
+        #print(cars)
         pass
 
     @staticmethod
@@ -28,16 +28,17 @@ class CommandHandler():
                                                         filetypes=[("JSON Files", ".json")])
         
         # loads the cars from the JSON file
-        try:
-            with open(JSONFilePath) as file:
-                listOfCars = json.load(file)
-                print(listOfCars)
-                for car in listOfCars:
-                    cars.append(
-                        Car(car["id"], car["type"], car["startPoint"], car["endPoint"], car["length"], car["status"])
-                    )
-            CommandHandler.gui.addCar()
+        with open(JSONFilePath) as file:
+            listOfCars = json.load(file)
                 
-        except Exception as e:
-            print(e)
-            tk.messagebox.showerror("Error loading the file", "The current file isn't a car configuration file")
+            for car in listOfCars:
+                print(car)
+                cars.append(
+                    Car(car["id"], car["type"], car["startPoint"], car["endPoint"], car["length"], car["status"])
+                )
+        CommandHandler.gui.addCar()
+        # try:
+                
+        # except Exception as e:
+        #    print("exception >> {}".format(e))
+        #    tk.messagebox.showerror("Error loading the file", "The current file isn't a car configuration file")
