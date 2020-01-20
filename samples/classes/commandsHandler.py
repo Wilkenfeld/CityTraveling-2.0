@@ -31,6 +31,7 @@ class CommandHandler():
         try:
             with open(JSONFilePath) as file:
                 listOfCars = json.load(file)
+                print(listOfCars)
                 for car in listOfCars:
                     cars.append(
                         Car(car["id"], car["type"], car["startPoint"], car["endPoint"], car["length"], car["status"])
