@@ -161,9 +161,10 @@ class GUI():
     def anim(self):
         # if the simulation is running
         # runs the animation
-        self.animID = animation.FuncAnimation(self.fig, self.draw)
+        isRunning = self.status == "running"
+        self.animID = animation.FuncAnimation(self.fig, self.draw, interval=10)
         print (self.status)
-        if self.status == "running":
+        if isRunning:
             self.animID.event_source.start()
             print("animation started")
         else: 
@@ -171,8 +172,10 @@ class GUI():
             print("animation stopped")
             
     def draw(self, frame):
+        print("draw")
+        print(frame)
         self.sp.add_patch(rect((1, 1), 2, 3))
-        #self.sp.show()
+        self.canvas.show()
 
     # inserts cars in the table (called when a file is loaded or when the Add button is pressed)
     def addCar(self):
@@ -183,5 +186,5 @@ class GUI():
                 tmp = Label(master = self.carsList, text=prop, borderwidth="1", relief = "sunken", pady="5")
                 tmp.columnconfigure(j, weight = 1)
                 tmp.grid(row = i + 1, column = j, sticky="NSEW")
-                self.sp.add_patch(rect(self.position_dict[car.id]), car.length, car.length)
-                self.sp.show()
+                # self.sp.add_patch(rect((2,2), car.length, car.length))
+                self.canvas.draw()
