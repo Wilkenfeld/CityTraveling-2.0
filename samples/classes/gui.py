@@ -12,7 +12,7 @@ from matplotlib.backends.backend_tkagg import (FigureCanvasTkAgg,
 from matplotlib.figure import Figure
 import matplotlib.lines as lines
 from matplotlib.patches import Rectangle as rect
-#import matplotlib.animate as animate
+import matplotlib.animation as animation
 
 # Custom imports
 from .core import *
@@ -25,6 +25,7 @@ root = Tk()
 class GUI():
 
     graph = None
+    status = "start"
 
     def main(self):
         
@@ -64,8 +65,6 @@ class GUI():
         root.grid_propagate(True)
         root.resizable(True, True)
         root.geometry("1200x680")
-
-        self.animate()
         
         # Execution
         root.mainloop()
@@ -106,8 +105,8 @@ class GUI():
         nx_graph = self.nxGraph(self.graph_obj)
 
         # The dimension of the widget is calculated by x * dpi and y * dpi
-        fig = Figure(figsize=(5, 5), dpi=100)
-        self.sp = fig.add_subplot(111)
+        self.fig = Figure(figsize=(5, 5), dpi=100)
+        self.sp = self.fig.add_subplot(111)
 
         self.sp.plot([n.position[0] for n in self.graph_obj.nodes], [n.position[1] for n in self.graph_obj.nodes], 'ro')
 
@@ -124,14 +123,15 @@ class GUI():
         self.sp.plot([n.position[0] for n in self.graph_obj.nodes], [n.position[1] for n in self.graph_obj.nodes], 'ro')
 
         # Binds the city to a tkinter widget and draws it
-        self.canvas = FigureCanvasTkAgg(fig, master=self.cityModel)
+        self.canvas = FigureCanvasTkAgg(self.fig, master=self.cityModel)
         self.canvas.get_tk_widget().grid(column=0, row=0)   
         
         self.canvas.draw()
 
 
     def run(self):
-        pass
+        self.status = "running"
+        self.anim()
 
     def createCarsMenu(self):
         # creates the header of the table
@@ -157,14 +157,21 @@ class GUI():
             self.manageBar.columnconfigure(i, weight=1)
             self.buttons[i]["button"].grid(row=0, column = i, sticky="NSEW")
 
-    def animate(self):
+    def anim(self):
         # if the simulation is running
         # runs the animation
-        if status == "running":
-            self.drawCars()
+        self.animID = animation.FuncAnimation(self.fig, self.draw)
+        print (self.status)
+        if self.status == "running":
+            self.animID.event_source.start()
+            print("animation started")
+        else: 
+            self.animID.event_source.stop()
+            print("animation stopped")
             
-
-
+    def draw(self, frame):
+        self.sp.add_patch(rect((1, 1), 2, 3))
+        #self.sp.show()
 
     # inserts cars in the table (called when a file is loaded or when the Add button is pressed)
     def addCar(self):
@@ -174,3 +181,5 @@ class GUI():
                 tmp = Label(master = self.carsList, text=prop, borderwidth="1", relief = "sunken", pady="5")
                 tmp.columnconfigure(j, weight = 1)
                 tmp.grid(row = i + 1, column = j, sticky="NSEW")
+                self.sp.add_patch(rect(self.position_dict[car.id]), car.length, car.length)
+                self.sp.show()
