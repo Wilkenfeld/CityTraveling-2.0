@@ -10,6 +10,7 @@ class Car():
         self.path = []
 
         self.currentPosition = startPoint
+        self.requestPath()
 
     self.position
 
