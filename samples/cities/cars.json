@@ -4,6 +4,7 @@
         "type": "car",
         "startPoint": 1,
         "endPoint": 5,
+        "length": 2,
         "status": "running"
     }
 ]

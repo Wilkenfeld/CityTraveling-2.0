@@ -33,7 +33,7 @@ class CommandHandler():
                 listOfCars = json.load(file)
                 for car in listOfCars:
                     cars.append(
-                        Car(car["id"], car["type"], car["startPoint"], car["endPoint"], car["status"])
+                        Car(car["id"], car["type"], car["startPoint"], car["endPoint"], car["length"], car["status"])
                     )
             CommandHandler.gui.addCar()
                 
