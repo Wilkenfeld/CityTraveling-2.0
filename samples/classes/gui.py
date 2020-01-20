@@ -4,6 +4,7 @@ from tkinter import *
 import tkinter
 from tkinter import filedialog
 import matplotlib as mpl
+import json
 import matplotlib.pyplot as plt
 import networkx as nx
 from matplotlib.backend_bases import key_press_handler
@@ -169,6 +170,7 @@ class GUI():
     # inserts cars in the table (called when a file is loaded or when the Add button is pressed)
     def addCar(self):
         self.void.destroy()
+
         for i, car in enumerate(cars):
             for j, prop in enumerate(car.props):
                 tmp = Label(master = self.carsList, text=prop, borderwidth="1", relief = "sunken", pady="5")
