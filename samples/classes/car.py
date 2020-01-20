@@ -7,8 +7,10 @@ class Car():
         self.endPoint = endPoint
         self.status = status
         self.props = (id, carType, startPoint, endPoint, length, status)
+        self.path = []
 
         self.currentPosition = startPoint
 
+    self.position
+
     def requestPath(self):
-        pass #self.path = RM.makePath(self.startPoint, self.endPoint)
