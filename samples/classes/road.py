@@ -7,7 +7,7 @@ class Road():
         self.length = length
 
         self.actualPollution = maxPollution
-        self.actualSpaceLeft = length                
+        self.actualSpaceLeft = length           
     
     def addCar(self, car):
         isAcceptable = self.actualSpaceLeft >= car.length and self.actualPollution + car.pollution < self.maxPollution
