@@ -8,7 +8,7 @@ class Car():
         self.status = status
         self.props = (id, carType, startPoint, endPoint, length, status)
 
-        self.currentPosition = start
+        self.currentPosition = startPoint
         self.requestPath()
 
     def requestPath(self):
