@@ -135,7 +135,7 @@ class GUI():
 
     def createCarsMenu(self):
         # creates the header of the table
-        headers = ["Car Number", "Type", "Start", "Destination", "Status"]
+        headers = ["Car Number", "Type", "Start", "Destination", "Length", "Status"]
         for i, head in enumerate(headers):
 
             tmp = Label(master=self.carsList, text=head, bg = "white", borderwidth=1, relief="groove")
