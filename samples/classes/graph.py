@@ -1,13 +1,13 @@
 from .node import Node as node
 import json
-from road import Road
+from .road import Road
 from tkinter import messagebox
 
 class Graph():
     
     number_of_graphs = 0
-    self.nodes = []
-    self.roads = {}
+    nodes = []
+    roads = {}
 
     def __init__(self, jsonFile = None):
         if (jsonFile != None and Graph.number_of_graphs == 0):
@@ -26,10 +26,11 @@ class Graph():
                             )
                         )
 
-                        for node in nodeRaw["closeTo"]:
-                            self.roads[nodeRaw["id"]] = Road(nodeRaw["id"], node[0], node[2], node[1])
+                        for n in nodeRaw["closeTo"]:
+                            self.roads[nodeRaw["id"]] = Road(nodeRaw["id"], n[0], n[2], n[1])
 
-                except:
+                except Exception as e:
+                    print(e)
                     messagebox.showerror("Error loading the file", "This file is not a city configuration file")            
 
     # Creates a path
@@ -41,7 +42,7 @@ class Graph():
             while not outOfPollutionLimit or nodeID is not end:
                 if node.id not in path:
                     possible = []
-                    for road in roads[node.id]:
+                    for road in self.roads[node.id]:
                         if (road.actualSpaceLeft >= car.length and road.actualPollution + car.pollution < road.maxPollution):
                             possible.append(road)
                     shorter = min([road.length for road in possible])
