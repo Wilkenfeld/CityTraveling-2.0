@@ -1,9 +1,4 @@
-from roadMaker import roadMaker as RM
-
-class Car():
-
-    self.path = []
-    
+class Car():    
 
     def __init__(self, id, carType, startPoint, endPoint, length, status):
         self.id = id
@@ -17,4 +12,4 @@ class Car():
         self.requestPath()
 
     def requestPath(self):
-        self.path = RM.makePath(self.startPoint, self.endPoint)
+        pass #self.path = RM.makePath(self.startPoint, self.endPoint)
