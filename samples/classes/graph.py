@@ -46,6 +46,7 @@ class Graph():
                         if (road.actualSpaceLeft >= car.length and road.actualPollution + car.pollution < road.maxPollution):
                             possible.append(road)
                     shorter = min([road.length for road in possible])
+        print(path)
                     
                     
 
