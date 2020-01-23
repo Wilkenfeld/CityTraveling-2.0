@@ -3,6 +3,7 @@ import json
 import tkinter as tk
 import matplotlib.pyplot as plt
 from .car import Car
+import samples.classes.gui as gui
 from matplotlib.backends.backend_tkagg import (FigureCanvasTkAgg,
                                                NavigationToolbar2Tk)
 from matplotlib.figure import Figure
@@ -11,14 +12,14 @@ class CommandHandler():
     gui = None
     # Main handler
     @staticmethod
-    def handleCommand(command, gui):
+    def handleCommand(command):
         CommandHandler.gui = gui 
-        if (command == "Add"): CommandHandler.addCar(gui)
+        if (command == "Add"): CommandHandler.addCar()
         elif command == "Load": CommandHandler.loadFromFile()
 
     # Add button (adds a car)
     @staticmethod
-    def addCar(gui):
+    def addCar():
         #print(cars)
         pass
 
