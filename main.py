@@ -1,5 +1,3 @@
-import samples.classes.gui as GUI
+import samples.classes.gui as gui
 
-gui = GUI.GUI()
-
-if __name__ == "__main__": gui.main()
+if __name__ == "__main__": gui.start()
