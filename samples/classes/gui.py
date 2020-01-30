@@ -30,7 +30,8 @@ def start():
 
     global status
     status = "start"
-        
+    
+
     # Creation of the main elements of the page
     cityScheme = None
     global cityModel
@@ -161,7 +162,7 @@ def anim():
     # runs the animation\
     isRunning = status == "running"
     global animID
-    animID = animation.FuncAnimation(fig, draw, frames=200, interval=100)
+    animID = animation.FuncAnimation(fig, draw, frames=500, interval=20, blit=True)
 
     print ("status: " + status)
     print("fig: ", fig)
@@ -176,7 +177,7 @@ def draw(frame):
     print("draw")
     print(frame)
     rect = sp.add_patch(rect((2, 2), 1, 1))
-    return rect
+    return rect,
 
 # inserts cars in the table (called when a file is loaded or when the Add button is pressed)
 def addCar():
