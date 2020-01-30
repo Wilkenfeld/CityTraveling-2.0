@@ -24,7 +24,7 @@ from .commandsHandler import CommandHandler as handler
 # Main Window
 root = Tk()
 
-void = None
+
 
 def start():
 
@@ -139,6 +139,7 @@ def createCarsMenu():
         carsList.columnconfigure(i, weight=1)
         tmp.grid(column = i, row = 0, sticky="NSEW")
 
+    global void
     void = Label(master = carsList, text="Click Add to add a new car!")
     void.grid(row = 0, column = 0, columnspan=len(headers))
 
@@ -174,7 +175,8 @@ def anim():
 def draw(frame):
     print("draw")
     print(frame)
-    sp.add_patch(rect((2, 2), 1, 1))
+    rect = sp.add_patch(rect((2, 2), 1, 1))
+    return rect
 
 # inserts cars in the table (called when a file is loaded or when the Add button is pressed)
 def addCar():
