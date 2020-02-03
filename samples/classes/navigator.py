@@ -1,2 +1,3 @@
 class Navigator():
-    pass
+    def makePath(self):
+        pass
