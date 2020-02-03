@@ -17,6 +17,7 @@ class Graph():
                 try:
                     nodesRaw = json.load(file)
                     for nodeRaw in nodesRaw:
+                        print(nodeRaw)
                         self.nodes.append(
                             node(
                                 nodeRaw["id"], 
@@ -27,28 +28,39 @@ class Graph():
                         )
 
                         for n in nodeRaw["closeTo"]:
-                            self.roads[nodeRaw["id"]] = Road(nodeRaw["id"], n[0], n[2], n[1])
+                            self.roads[nodeRaw["id"]].append(Road(nodeRaw["id"], n[0], n[2], n[1]))
 
                 except Exception as e:
                     print(e)
                     messagebox.showerror("Error loading the file", "This file is not a city configuration file")            
-
-    # Creates a path
+                    
     def makePath(self, start, end, car):
         outOfPollutionLimit = False
         nodeID = start
-        path = []
-        while nodeID is not end and not outOfPollutionLimit:
-            while not outOfPollutionLimit or nodeID is not end:
-                if node.id not in path:
-                    possible = []
-                    for road in self.roads[node.id]:
-                        if (road.actualSpaceLeft >= car.length and road.actualPollution + car.pollution < road.maxPollution):
-                            possible.append(road)
-                    shorter = min([road.length for road in possible])
+        # gets the best paths (according to time) and filters them checking the pollution
+        paths = getFastestPaths(start, end)
+        final_paths = []
+
+        for path in paths:
+            current = 0
+            totalPollution = 0
+            temp_path = []
+            for node in path:
+                for road in self.roads[node.id]:
+                    if (road.end is path[current + 1]):
+                        if (road.actualPollution + car.pollution < road.maxPollution):
+                            totalPollution += car.pollution
+                            break
+
+            final_paths.append({
+                "pollution": totalPollution,
+                "path": temp_path 
+            })
+
         print(path)
-                    
-                    
+        pollutions = [p[pollution] for p in final_paths]
+         
+        return final_paths[final_paths.index(min(pollutions))]["path"]
 
-                    
-
+    def getFastestPaths(start, end):
+        pass
