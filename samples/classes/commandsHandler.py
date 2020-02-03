@@ -30,7 +30,7 @@ class CommandHandler():
                 listOfCars = json.load(file)
                     
                 for car in listOfCars:
-                    car_obj = Car(car["id"], car["type"], car["startPoint"], car["endPoint"], car["length"], car["status"])
+                    car_obj = Car(car["id"], car["type"], car["startPoint"], car["endPoint"], car["length"], car["status"], car["pollution"])
                     CommandHandler.addCar(car_obj)
 
             except Exception as e:
