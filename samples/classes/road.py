@@ -6,7 +6,7 @@ class Road():
         self.maxPollution = maxPollution
         self.length = length
 
-        self.actualPollution = maxPollution
+        self.actualPollution = 0
         self.actualSpaceLeft = length           
     
     def addCar(self, car):
