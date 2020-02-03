@@ -5,6 +5,7 @@
         "startPoint": 1,
         "endPoint": 5,
         "length": 2,
-        "status": "running"
+        "status": "running",
+        "pollution": 1
     }
 ]
