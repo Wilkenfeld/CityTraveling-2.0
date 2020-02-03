@@ -12,6 +12,7 @@ def initialize():
 
     # handler for the animation
     global animID
+    animID = None
 
     # Buttons of the cars list
     global buttons
