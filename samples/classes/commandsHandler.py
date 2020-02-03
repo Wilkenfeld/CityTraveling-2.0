@@ -28,6 +28,8 @@ class CommandHandler():
         JSONFilePath = tk.filedialog.askopenfilename(title="Select JSON file", 
                                                         filetypes=[("JSON Files", ".json")])
         
+        cars = []
+
         # loads the cars from the JSON file
         with open(JSONFilePath) as file:
             listOfCars = json.load(file)
@@ -38,6 +40,9 @@ class CommandHandler():
                     Car(car["id"], car["type"], car["startPoint"], car["endPoint"], car["length"], car["status"])
                 )
         CommandHandler.gui.addCar()
+
+        return cars
+        
         # try:
                 
         # except Exception as e:
