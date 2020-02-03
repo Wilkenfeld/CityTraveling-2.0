@@ -85,32 +85,34 @@ def openJSONFile():
 
 def createCityImage():
     # The dimension of the widget is calculated by x * dpi and y * dpi
-    fig = Figure(figsize=(5, 5), dpi=100)
-    sp = fig.add_subplot(111)
+    core.fig = Figure(figsize=(5, 5), dpi=100)
+    core.sp = core.fig.add_subplot(111)
 
-    sp.plot([n.position[0] for n in core.graph_obj.nodes], [n.position[1] for n in core.graph_obj.nodes], 'ro')
+    core.sp.plot([n.position[0] for n in core.graph_obj.nodes], [n.position[1] for n in core.graph_obj.nodes], 'ro')
 
     # Draws the streets
     for node in core.graph_obj.nodes:
+        print([node for node in core.graph_obj.nodes])
+        print (core.position_dict)
         
-        targets = [core.position_dict[node.closeTo[i][0]] for i, _ in enumerate(node.closeTo)]
-
-        for t in targets:
-            l = lines.Line2D([node.position[0], t[0]], [node.position[1], t[1]])
-            sp.add_line(l)  
+        # targets = [core.position_dict[node.closeTo[i][0]] for i, _ in enumerate(node.closeTo)]
+        print (core.position_dict[node.closeTo[0][0]])
+        #for t in targets:
+        #    l = lines.Line2D([node.position[0], t[0]], [node.position[1], t[1]])
+        #    core.sp.add_line(l)  
             
     # Draws the nodes
-    sp.plot([n.position[0] for n in core.graph_obj.nodes], [n.position[1] for n in core.graph_obj.nodes], 'ro')
+    core.sp.plot([n.position[0] for n in core.graph_obj.nodes], [n.position[1] for n in core.graph_obj.nodes], 'ro')
 
     # Binds the city to a tkinter widget and draws it 
-    canvas = FigureCanvasTkAgg(fig, master=core.cityModel)
-    canvas.get_tk_widget().grid(column=0, row=0)   
+    core.canvas = FigureCanvasTkAgg(core.fig, master=core.cityModel)
+    core.canvas.get_tk_widget().grid(column=0, row=0)   
     
-    canvas.draw()
+    core.canvas.draw()
 
 
 def run():
-    status = "running"
+    core.status = "running"
     anim()
 
 def createCarsMenu():
@@ -132,24 +134,26 @@ def createCarsMenu():
     for i, head in enumerate(headers):
         buttons.append({
             "command": head,
-            "button": Button(master = core.manageBar, text = head, command = getCars())
+            "button": Button(master = core.manageBar, text = head, command = partial(getCars, head))
         })
         core.manageBar.columnconfigure(i, weight=1)
         buttons[i]["button"].grid(row=0, column = i, sticky="NSEW")
 
-def getCars():
-    pass
+def getCars(head):
+    handler.handleCommand(head)
+    if (head == "Load"): 
+        addCar()
 
 def anim():
     # if the simulation is running
     # runs the animation\
-    isRunning = status == "running"
+    isRunning = core.status == "running"
     
-    animID = animation.FuncAnimation(fig, draw, frames=500, interval=20, blit=True)
+    core.animID = animation.FuncAnimation(core.fig, draw, frames=500, interval=20, blit=True)
 
-    print ("status: " + status)
-    print("fig: ", fig)
-    print("animID:", animID)
+    print ("status: " + core.status)
+    print("fig: ", core.fig)
+    print("animID:", core.animID)
     print("draw:", draw)
     if isRunning:
         print("animation started")
@@ -157,7 +161,7 @@ def anim():
         print("animation stopped")
 
 def draw(frame):
-    rectangle = sp.add_patch(rect((2 * (frame / 50), 2 * (frame / 100)), 1, 1))
+    rectangle = core.sp.add_patch(rect((2 * (frame / 50), 2 * (frame / 100)), 1, 1))
     cars_coords = calc_coords()
     return rectangle,
 
@@ -165,13 +169,13 @@ def draw(frame):
 def addCar():
     core.void.destroy()
 
-    for i, car in enumerate(cars):
+    for i, car in enumerate(core.cars_common):
         for j, prop in enumerate(car.props):
             tmp = Label(master = core.carsList, text=prop, borderwidth="1", relief = "sunken", pady="5")
             tmp.columnconfigure(j, weight = 1)
             tmp.grid(row = i + 1, column = j, sticky="NSEW")
-            canvas.draw()
+            core.canvas.draw()
 
 def calc_coords():
-    for car in cars:
+    for car in core.cars_common:
         car.getCurrentPosition()
