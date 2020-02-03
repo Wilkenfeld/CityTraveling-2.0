@@ -24,8 +24,6 @@ from .commandsHandler import CommandHandler as handler
 # Main Window
 root = Tk()
 
-void = None
-
 def start():
 
     global status
@@ -140,6 +138,7 @@ def createCarsMenu():
         carsList.columnconfigure(i, weight=1)
         tmp.grid(column = i, row = 0, sticky="NSEW")
 
+    global void
     void = Label(master = carsList, text="Click Add to add a new car!")
     void.grid(row = 0, column = 0, columnspan=len(headers))
 
@@ -160,6 +159,7 @@ def anim():
     # if the simulation is running
     # runs the animation\
     isRunning = status == "running"
+    
     global animID
     animID = animation.FuncAnimation(fig, draw, frames=500, interval=20, blit=True)
 
@@ -173,10 +173,9 @@ def anim():
         print("animation stopped")
 
 def draw(frame):
-    print("draw")
-    print(frame)
-    patch = sp.add_patch(rect((2, 2), 1, 1))
-    return patch,
+    rectangle = sp.add_patch(rect((2 * (frame / 50), 2 * (frame / 100)), 1, 1))
+    cars_coords = calc_coords()
+    return rectangle,
 
 # inserts cars in the table (called when a file is loaded or when the Add button is pressed)
 def addCar():
@@ -187,6 +186,8 @@ def addCar():
             tmp = Label(master = carsList, text=prop, borderwidth="1", relief = "sunken", pady="5")
             tmp.columnconfigure(j, weight = 1)
             tmp.grid(row = i + 1, column = j, sticky="NSEW")
-            # sp.add_patch(rect((2,2), car.length, car.length))
             canvas.draw()
 
+def calc_coords():
+    for car in cars:
+        car.getCurrentPosition()

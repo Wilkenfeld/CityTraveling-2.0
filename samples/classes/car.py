@@ -14,3 +14,6 @@ class Car():
 
     def requestPath(self):
         pass
+
+    def getCurrentPosition(self):
+        pass
