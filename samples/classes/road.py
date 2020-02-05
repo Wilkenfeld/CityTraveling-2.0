@@ -6,7 +6,6 @@ class Road():
         self.start = start
         self.end = end
         self.maxPollution = maxPollution
-        self.length = length
 
         self.actualPollution = 0
         self.actualSpaceLeft = math.sqrt(start**2 + end**2)
