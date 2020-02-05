@@ -85,21 +85,19 @@ def openJSONFile():
 
 def createCityImage():
     # The dimension of the widget is calculated by x * dpi and y * dpi
-    core.fig = Figure(figsize=(5, 5), dpi=100)
+    core.fig = Figure(figsize=core.canvasDimensions, dpi=100)
     core.sp = core.fig.add_subplot(111)
 
     core.sp.plot([n.position[0] for n in core.graph_obj.nodes], [n.position[1] for n in core.graph_obj.nodes], 'ro')
 
     # Draws the streets
     for node in core.graph_obj.nodes:
-        print([node for node in core.graph_obj.nodes])
-        print (core.position_dict)
         
-        # targets = [core.position_dict[node.closeTo[i][0]] for i, _ in enumerate(node.closeTo)]
-        print (core.position_dict[node.closeTo[0][0]])
-        #for t in targets:
-        #    l = lines.Line2D([node.position[0], t[0]], [node.position[1], t[1]])
-        #    core.sp.add_line(l)  
+        targets = [core.position_dict[node.closeTo[i][0]] for i, _ in enumerate(node.closeTo)]
+        # print (node.closeTo[0][0])
+        for t in targets:
+            l = lines.Line2D([node.position[0], t[0]], [node.position[1], t[1]])
+            core.sp.add_line(l)
             
     # Draws the nodes
     core.sp.plot([n.position[0] for n in core.graph_obj.nodes], [n.position[1] for n in core.graph_obj.nodes], 'ro')
@@ -108,6 +106,8 @@ def createCityImage():
     core.canvas = FigureCanvasTkAgg(core.fig, master=core.cityModel)
     core.canvas.get_tk_widget().grid(column=0, row=0)   
     
+    prov_fig = rect((1, 1), 0.6 , 0.6)
+
     core.canvas.draw()
 
 

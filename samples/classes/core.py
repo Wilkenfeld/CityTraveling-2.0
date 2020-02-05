@@ -41,7 +41,7 @@ def initialize():
 
     # Dimension of the canvas (hor, ver)
     global canvasDimensions
-    canvasDimensions = (800, 800)
+    canvasDimensions = (8, 8)
 
     # List of cars on the simulation
     global cars_common
@@ -50,3 +50,7 @@ def initialize():
     # Status of the app (at the beginning is setted on "start")
     global status
     status = "start"
+
+    # Dimensions of cars in inches
+    global car_dim
+    car_dim_inches = (0.5, 0.5)

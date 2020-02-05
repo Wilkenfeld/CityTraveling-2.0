@@ -28,7 +28,7 @@ class Graph():
                         )
 
                         for n in nodeRaw["closeTo"]:
-                            self.roads[nodeRaw["id"]].append(Road(nodeRaw["id"], n[0], n[2], n[1]))
+                            self.roads[nodeRaw["id"]] = Road(nodeRaw["id"], n[0], n[1])
 
                 except Exception as e:
                     print(e)
