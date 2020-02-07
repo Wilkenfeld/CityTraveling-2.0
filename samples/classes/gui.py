@@ -24,6 +24,7 @@ from .commandsHandler import CommandHandler as handler
 # Main Window
 root = Tk()
 
+
 def start():
     # initialization of the common elements
     core.initialize()
@@ -62,7 +63,7 @@ def start():
     root.grid_propagate(True)
     root.resizable(True, True)
     root.geometry("1200x680")
-    
+
     # Execution
     root.mainloop()
 
@@ -105,11 +106,22 @@ def createCityImage():
     # Binds the city to a tkinter widget and draws it 
     core.canvas = FigureCanvasTkAgg(core.fig, master=core.cityModel)
     core.canvas.get_tk_widget().grid(column=0, row=0)   
-    
-    prov_fig = rect((1, 1), 0.6 , 0.6)
 
     core.canvas.draw()
 
+    # animation.FuncAnimation(core.fig, partial(tranim, i), frames = 500, interval = 200, blit=True)
+ 
+def tranim(frame, i):
+    print(i)
+    x = 1
+    y = 1
+    x += 0.5
+    y += 0.5
+
+    prov_fig = rect((x, y), 0.6 , 0.6)
+    core.sp.add_patch(prov_fig)
+
+    return prov_fig,
 
 def run():
     core.status = "running"
@@ -148,8 +160,8 @@ def anim():
     # if the simulation is running
     # runs the animation\
     isRunning = core.status == "running"
-    
-    core.animID = animation.FuncAnimation(core.fig, draw, frames=500, interval=20, blit=True)
+
+    core.animID = animation.FuncAnimation(core.fig, draw, repeat=False, frames=200, interval=20, blit=True)
 
     print ("status: " + core.status)
     print("fig: ", core.fig)
@@ -161,9 +173,42 @@ def anim():
         print("animation stopped")
 
 def draw(frame):
-    rectangle = core.sp.add_patch(rect((2 * (frame / 50), 2 * (frame / 100)), 1, 1))
-    cars_coords = calc_coords()
-    return rectangle,
+
+    car_rects = []
+
+    for i, car in enumerate(core.cars_common):
+        if car.status == "running":
+            details = core.graphic_cars_details[i]
+            if (details["current_x"] >= core.position_dict[str(car.path[details["next_point_index"]])][0] and details["current_y"] is core.position_dict[str(car.path[details["next_point_index"]])][1]):
+                core.graphic_cars_details[i]["next_point_index"] += 1
+                if (core.graphic_cars_details[i]["next_point_index"] < len(car.path)-1):
+                    x_inc = (core.position_dict[str(car.path[details["next_point_index"]])][0] - core.position_dict[str(car.path[details["next_point_index"] - 1])][0]) / float(200)
+                    y_inc = (core.position_dict[str(car.path[details["next_point_index"]])][1] - core.position_dict[str(car.path[details["next_point_index"] - 1])][1]) / float(200)
+                    core.graphic_cars_details[i]["next_point_increase"] = (x_inc, y_inc)
+                else:
+                    car.status = "finished"
+
+                
+            x = core.graphic_cars_details[i]["current_x"] + core.graphic_cars_details[i]["next_point_increase"][0]
+            y = core.graphic_cars_details[i]["current_y"] + core.graphic_cars_details[i]["next_point_increase"][1]
+
+            core.graphic_cars_details[i]["current_x"] = x
+            core.graphic_cars_details[i]["current_y"] = y
+
+        else:
+            x = core.graphic_cars_details[i]["current_x"]
+            y = core.graphic_cars_details[i]["current_y"]
+
+        prov_fig = rect((x - 0.3, y - 0.3), 0.6 , 0.6)
+        car_rects.append(prov_fig)
+        
+        for rec in car_rects:
+            core.sp.add_patch(prov_fig)
+
+    # rectangle = core.sp.add_patch(rect((2 * (frame / 50), 2 * (frame / 100)), 1, 1))
+    # cars_coords = calc_coords()
+    
+    return prov_fig,
 
 # inserts cars in the table (called when a file is loaded or when the Add button is pressed)
 def addCar():

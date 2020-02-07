@@ -3,7 +3,7 @@
         "id": 0,
         "type": "car",
         "startPoint": 1,
-        "endPoint": 5,
+        "endPoint": 12,
         "length": 2,
         "status": "running",
         "pollution": 1
