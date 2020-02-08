@@ -3,7 +3,8 @@ import json
 from .road import Road
 from tkinter import messagebox
 import traceback as tb
-
+import math
+import samples.classes.core as core
 class Graph():
     
     number_of_graphs = 0
@@ -65,6 +66,24 @@ class Graph():
         pollutions = [p["pollution"] for p in final_paths]
         
         return final_paths[pollutions.index(min(pollutions))]["path"]
+
+    # Method that calculates the total distance from a node to another
+    def calc_path_length(self, path):
+        tot = 0
+        i = 0
+        while i < len(path) - 1:
+            coord_a = core.position_dict[str(path[i])]
+            coord_b = core.position_dict[str(path[i + 1])]
+            xa = coord_a[0]
+            xb = coord_b[0]
+            ya = coord_a[1]
+            yb = coord_b[1]
+
+            tot += math.sqrt(((xa - xb) ** 2) + ((ya - yb) ** 2))
+            i += 1
+        
+        return tot 
+
 
     def getFastestPaths(self, start, end):
         paths = [
