@@ -1,8 +1,7 @@
 
 import math as Math
 from functools import partial
-from tkinter import *
-import tkinter
+import tkinter as tk
 from tkinter import filedialog
 import matplotlib as mpl
 import json
@@ -22,26 +21,26 @@ from .graph import Graph
 from .commandsHandler import CommandHandler as handler
 
 # Main Window
-root = Tk()
+root = tk.Tk()
 
 
 def start():
     # initialization of the common elements
     core.initialize()
     cityScheme = None
-    core.cityModel = Canvas(master=root, 
+    core.cityModel = tk.Canvas(master=root, 
                             bg="grey", 
                             width="500", 
                             height="500")
 
-    menu = Frame(master=root, borderwidth=3, height="500", width="100", pady="30", padx="30")
-    title = Label(master=menu, text="CitySim! (ALPHA RELEASE 1.0)")
-    JSONMenu = Button(master = menu, text="Open File", padx="5", pady="5", command=openJSONFile)
-    runButton = Button(master = menu, text="Run", padx="5", pady="5", command=run)
+    menu = tk.Frame(master=root, borderwidth=3, height="500", width="100", pady="30", padx="30")
+    title = tk.Label(master=menu, text="CitySim! (ALPHA RELEASE 1.0)")
+    JSONMenu = tk.Button(master = menu, text="Open File", padx="5", pady="5", command=openJSONFile)
+    runButton = tk.Button(master = menu, text="Run", padx="5", pady="5", command=run)
 
-    carsMenu = Frame(master = root, bg ="black", width="500")
-    core.carsList = Frame(master = carsMenu, bg = "green", width="500")
-    core.manageBar = Frame(master = carsMenu, bg = "blue", width = "500")
+    carsMenu = tk.Frame(master = root, bg ="black", width="500")
+    core.carsList = tk.Frame(master = carsMenu, bg = "green", width="500")
+    core.manageBar = tk.Frame(master = carsMenu, bg = "blue", width = "500")
 
     # Layout of the window
     root.title("CitySim")
@@ -85,9 +84,11 @@ def openJSONFile():
     createCarsMenu()
 
 def createCityImage():
+    
     # The dimension of the widget is calculated by x * dpi and y * dpi
     core.fig = Figure(figsize=core.canvasDimensions, dpi=100)
     core.sp = core.fig.add_subplot(111)
+    # core.sp.set_axes_off()
 
     core.sp.plot([n.position[0] for n in core.graph_obj.nodes], [n.position[1] for n in core.graph_obj.nodes], 'ro')
 
@@ -132,11 +133,11 @@ def createCarsMenu():
     headers = ["Car Number", "Type", "Start", "Destination", "Length", "Status"]
     for i, head in enumerate(headers):
 
-        tmp = Label(master=core.carsList, text=head, bg = "white", borderwidth=1, relief="groove")
+        tmp = tk.Label(master=core.carsList, text=head, bg = "white", borderwidth=1, relief="groove")
         core.carsList.columnconfigure(i, weight=1)
         tmp.grid(column = i, row = 0, sticky="NSEW")
 
-    core.void = Label(master = core.carsList, text="Click Add to add a new car!")
+    core.void = tk.Label(master = core.carsList, text="Click Add to add a new car!")
     core.void.grid(row = 0, column = 0, columnspan=len(headers))
 
     # creates the "user" bar
@@ -146,7 +147,7 @@ def createCarsMenu():
     for i, head in enumerate(headers):
         buttons.append({
             "command": head,
-            "button": Button(master = core.manageBar, text = head, command = partial(getCars, head))
+            "button": tk.Button(master = core.manageBar, text = head, command = partial(getCars, head))
         })
         core.manageBar.columnconfigure(i, weight=1)
         buttons[i]["button"].grid(row=0, column = i, sticky="NSEW")
@@ -158,7 +159,7 @@ def getCars(head):
 
 def anim():
     # if the simulation is running
-    # runs the animation\
+    # runs the animation
     isRunning = core.status == "running"
 
     core.animID = animation.FuncAnimation(core.fig, draw, repeat=False, frames=200, interval=20, blit=True)
@@ -173,17 +174,23 @@ def anim():
         print("animation stopped")
 
 def draw(frame):
-
     car_rects = []
 
     for i, car in enumerate(core.cars_common):
         if car.status == "running":
             details = core.graphic_cars_details[i]
-            if (details["current_x"] >= core.position_dict[str(car.path[details["next_point_index"]])][0] and details["current_y"] is core.position_dict[str(car.path[details["next_point_index"]])][1]):
+            print (details["current_x"], details["current_y"])
+            print(core.position_dict[str(car.path[details["next_point_index"]])])
+            if (round(details["current_x"])  == core.position_dict[str(car.path[details["next_point_index"]])][0] and round(details["current_y"])  == core.position_dict[str(car.path[details["next_point_index"]])][1]):
+                print("nell'if")
                 core.graphic_cars_details[i]["next_point_index"] += 1
-                if (core.graphic_cars_details[i]["next_point_index"] < len(car.path)-1):
+                if (core.graphic_cars_details[i]["next_point_index"] < len(car.path)):
+                    
                     x_inc = (core.position_dict[str(car.path[details["next_point_index"]])][0] - core.position_dict[str(car.path[details["next_point_index"] - 1])][0]) / float(200)
+                    x_inc = (x_inc * 200) / car.path_length
+                    
                     y_inc = (core.position_dict[str(car.path[details["next_point_index"]])][1] - core.position_dict[str(car.path[details["next_point_index"] - 1])][1]) / float(200)
+                    y_inc = (y_inc * 200) / car.path_length
                     core.graphic_cars_details[i]["next_point_increase"] = (x_inc, y_inc)
                 else:
                     car.status = "finished"
@@ -199,7 +206,7 @@ def draw(frame):
             x = core.graphic_cars_details[i]["current_x"]
             y = core.graphic_cars_details[i]["current_y"]
 
-        prov_fig = rect((x - 0.3, y - 0.3), 0.6 , 0.6)
+        prov_fig = rect((x - 0.3, y - 0.5), 0.6 , 0.6)
         car_rects.append(prov_fig)
         
         for rec in car_rects:
@@ -216,7 +223,7 @@ def addCar():
 
     for i, car in enumerate(core.cars_common):
         for j, prop in enumerate(car.props):
-            tmp = Label(master = core.carsList, text=prop, borderwidth="1", relief = "sunken", pady="5")
+            tmp = tk.Label(master = core.carsList, text=prop, borderwidth="1", relief = "sunken", pady="5")
             tmp.columnconfigure(j, weight = 1)
             tmp.grid(row = i + 1, column = j, sticky="NSEW")
             core.canvas.draw()
