@@ -178,27 +178,28 @@ def draw(frame):
 
     for i, car in enumerate(core.cars_common):
         if car.status == "running":
+            isInCheckpoint = False
             details = core.graphic_cars_details[i]
             print (details["current_x"], details["current_y"])
             print(core.position_dict[str(car.path[details["next_point_index"]])])
             if (round(details["current_x"])  == core.position_dict[str(car.path[details["next_point_index"]])][0] and round(details["current_y"])  == core.position_dict[str(car.path[details["next_point_index"]])][1]):
-                print("nell'if")
+                isInCheckpoint = True
                 core.graphic_cars_details[i]["next_point_index"] += 1
+                print(car.path_length)
                 if (core.graphic_cars_details[i]["next_point_index"] < len(car.path)):
+                    # print("x del prossimo punto >> {0}\n y del prossimo punto >> {1} \n punto - attuale >> {2} {3}".format((core.position_dict[str(car.path[details["next_point_index"]])][0], core.position_dict[str(car.path[details["next_point_index"]])][1], core.position_dict[str(car.path[details["next_point_index"]])][0] - details["current_x"], core.position_dict[str(car.path[details["next_point_index"]])][1] - details["current_y"])))
+                    x_inc = ((core.position_dict[str(car.path[details["next_point_index"]])][0] - core.position_dict[str(car.path[details["next_point_index"]] - 1)][0]) / float(200)) + (core.position_dict[str(car.path[details["next_point_index"]])][0] - details["current_x"])
+                    x_inc = (x_inc ) / (car.path_length)
                     
-                    x_inc = (core.position_dict[str(car.path[details["next_point_index"]])][0] - core.position_dict[str(car.path[details["next_point_index"] - 1])][0]) / float(200)
-                    x_inc = (x_inc * 200) / car.path_length
-                    
-                    y_inc = (core.position_dict[str(car.path[details["next_point_index"]])][1] - core.position_dict[str(car.path[details["next_point_index"] - 1])][1]) / float(200)
-                    y_inc = (y_inc * 200) / car.path_length
+                    y_inc = ((core.position_dict[str(car.path[details["next_point_index"]])][1] - core.position_dict[str(car.path[details["next_point_index"]] - 1)][1]) / float(200)) + (core.position_dict[str(car.path[details["next_point_index"]])][1] - details["current_y"])
+                    y_inc = (y_inc) / (car.path_length)
                     core.graphic_cars_details[i]["next_point_increase"] = (x_inc, y_inc)
                 else:
                     car.status = "finished"
 
-                
             x = core.graphic_cars_details[i]["current_x"] + core.graphic_cars_details[i]["next_point_increase"][0]
             y = core.graphic_cars_details[i]["current_y"] + core.graphic_cars_details[i]["next_point_increase"][1]
-
+            
             core.graphic_cars_details[i]["current_x"] = x
             core.graphic_cars_details[i]["current_y"] = y
 
@@ -206,7 +207,7 @@ def draw(frame):
             x = core.graphic_cars_details[i]["current_x"]
             y = core.graphic_cars_details[i]["current_y"]
 
-        prov_fig = rect((x - 0.3, y - 0.5), 0.6 , 0.6)
+        prov_fig = rect((x - 0.3, y - 0.3), 0.6 , 0.6)
         car_rects.append(prov_fig)
         
         for rec in car_rects:
@@ -215,7 +216,7 @@ def draw(frame):
     # rectangle = core.sp.add_patch(rect((2 * (frame / 50), 2 * (frame / 100)), 1, 1))
     # cars_coords = calc_coords()
     
-    return prov_fig,
+        return prov_fig,
 
 # inserts cars in the table (called when a file is loaded or when the Add button is pressed)
 def addCar():
