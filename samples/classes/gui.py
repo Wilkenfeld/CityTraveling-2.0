@@ -181,6 +181,7 @@ def draw(frame):
             details = core.graphic_cars_details[i]
             print (details["current_x"], details["current_y"])
             print(core.position_dict[str(car.path[details["next_point_index"]])])
+            if (details["current_x"]  >= core.position_dict[str(car.path[details["next_point_index"]])][0] and round(details["current_y"])  == core.position_dict[str(car.path[details["next_point_index"]])][1]):
                 print("nell'if")
                 core.graphic_cars_details[i]["next_point_index"] += 1
                 if (core.graphic_cars_details[i]["next_point_index"] < len(car.path)):
@@ -191,9 +192,16 @@ def draw(frame):
                     y_inc = (core.position_dict[str(car.path[details["next_point_index"]])][1] - core.position_dict[str(car.path[details["next_point_index"] - 1])][1]) / float(200)
                     y_inc = (y_inc * 200) / car.path_length
                     core.graphic_cars_details[i]["next_point_increase"] = (x_inc, y_inc)
+
+                    x = round(core.graphic_cars_details[i]["current_x"])
+                    y = round(core.graphic_cars_details[i]["current_y"])
+
                 else:
                     car.status = "finished"
 
+            else:                
+                x = core.graphic_cars_details[i]["current_x"] + core.graphic_cars_details[i]["next_point_increase"][0]
+                y = core.graphic_cars_details[i]["current_y"] + core.graphic_cars_details[i]["next_point_increase"][1]
 
             core.graphic_cars_details[i]["current_x"] = x
             core.graphic_cars_details[i]["current_y"] = y
