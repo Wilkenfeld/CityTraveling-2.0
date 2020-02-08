@@ -7,6 +7,7 @@ import traceback as tb
 from matplotlib.backends.backend_tkagg import (FigureCanvasTkAgg,
                                                NavigationToolbar2Tk)
 from matplotlib.figure import Figure
+from ..helpers import helper
 
 class CommandHandler():
     # Main handler
@@ -23,6 +24,7 @@ class CommandHandler():
             "current_y": core.position_dict[str(car.startPoint)][1],
             "next_point_index": 0,
             "next_point_increase": (0, 0)
+            # "distances": helper.calc_distances(car.path)
         })
         core.cars_common.append(car)
         print(car)
