@@ -181,7 +181,6 @@ def draw(frame):
             details = core.graphic_cars_details[i]
             print (details["current_x"], details["current_y"])
             print(core.position_dict[str(car.path[details["next_point_index"]])])
-            if (round(details["current_x"])  == core.position_dict[str(car.path[details["next_point_index"]])][0] and round(details["current_y"])  == core.position_dict[str(car.path[details["next_point_index"]])][1]):
                 print("nell'if")
                 core.graphic_cars_details[i]["next_point_index"] += 1
                 if (core.graphic_cars_details[i]["next_point_index"] < len(car.path)):
@@ -195,9 +194,6 @@ def draw(frame):
                 else:
                     car.status = "finished"
 
-                
-            x = core.graphic_cars_details[i]["current_x"] + core.graphic_cars_details[i]["next_point_increase"][0]
-            y = core.graphic_cars_details[i]["current_y"] + core.graphic_cars_details[i]["next_point_increase"][1]
 
             core.graphic_cars_details[i]["current_x"] = x
             core.graphic_cars_details[i]["current_y"] = y
