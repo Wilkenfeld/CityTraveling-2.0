@@ -14,8 +14,11 @@ class Car():
         self.path = []
 
         self.currentPosition = startPoint
+        self.path_length = 0
+
     def requestPath(self):
         self.path = core.graph_obj.makePath(self.startPoint, self.endPoint, self)
+        self.path_length = core.graph_obj.calc_path_length(self.path)
 
 
     def getCurrentPosition(self):
